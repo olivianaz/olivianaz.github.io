@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .items-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .item-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            word-break: break-all;
+            display: block;
+        }
+
+        .item-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Collection</h1>
+
+        <div class="section">
+            <h2>🎮 Games</h2>
+            <div id="games-list" class="items-list"></div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Slides</h2>
+            <div id="presentations-list" class="items-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // EDIT THESE ARRAYS TO ADD YOUR GAMES AND PRESENTATIONS
+        const games = [
+            {
+                title: "Chess Online",
+                link: "https://www.chess.com"
+            },
+            {
+                title: "Wordle",
+                link: "https://www.nytimes.com/games/wordle"
+            },
+            {
+                title: "2048",
+                link: "https://play2048.co"
+            }
+        ];
+
+        const presentations = [
+            {
+                title: "Q4 Business Review",
+                link: "https://docs.google.com/presentation/d/sample1"
+            },
+            {
+                title: "Product Roadmap 2025",
+                link: "https://docs.google.com/presentation/d/sample2"
+            },
+            {
+                title: "Team Onboarding",
+                link: "https://slides.example.com/onboarding"
+            }
+        ];
+
+        function render() {
+            renderCollection('games', games);
+            renderCollection('presentations', presentations);
+        }
+
+        function renderCollection(type, collection) {
+            const listElement = document.getElementById(`${type}-list`);
+            
+            listElement.innerHTML = collection.map(item => `
+                <a href="${escapeHtml(item.link)}" target="_blank" class="item">
+                    <div>
+                        <div class="item-title">${escapeHtml(item.title)}</div>
+                        <span class="item-link">${escapeHtml(item.link)}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        render();
+    </script>
+</body>
+</html>
