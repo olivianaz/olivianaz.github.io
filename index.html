@@ -4,324 +4,520 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #f5f4f1;
+            --surface: #ffffff;
+            --surface-hover: #fafaf8;
+            --border: #e8e6e0;
+            --border-strong: #d4d0c8;
+            --text-primary: #1a1917;
+            --text-secondary: #6b6760;
+            --text-muted: #a09c95;
+            --accent: #2a5f8f;
+            --accent-light: #e8f0f7;
+            --tag-bg: #f0ede8;
+            --badge-bg: #eeecea;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --radius: 10px;
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px 80px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 860px;
             margin: 0 auto;
         }
 
-        h1 {
-            color: white;
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        /* Header */
+        header {
+            margin-bottom: 36px;
         }
 
+        header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.4em;
+            font-weight: 400;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            font-weight: 400;
+        }
+
+        /* Search */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        #search {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95em;
+            border: 1.5px solid var(--border-strong);
+            border-radius: var(--radius);
+            background: var(--surface);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        #search:focus {
+            border-color: var(--accent);
+        }
+
+        #search::placeholder { color: var(--text-muted); }
+
+        .search-clear {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.1em;
+            display: none;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .search-clear:hover { color: var(--text-secondary); }
+
+        /* Sections */
         .section {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .section h2 {
-            color: #667eea;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
             margin-bottom: 20px;
-            font-size: 1.8em;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
         }
 
-        .items-list {
-            display: grid;
-            gap: 15px;
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
         }
+
+        .section-header:hover { background: var(--surface-hover); }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .section-emoji {
+            font-size: 1.15em;
+        }
+
+        .badge {
+            background: var(--badge-bg);
+            color: var(--text-secondary);
+            font-size: 0.75em;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .chevron {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 0.85em;
+        }
+
+        .section.collapsed .chevron { transform: rotate(-90deg); }
+        .section.collapsed .items-list { display: none; }
+
+        /* Items */
+        .items-list { padding: 8px 0; }
 
         .item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            justify-content: space-between;
+            padding: 11px 22px;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.12s;
+            border-bottom: 1px solid transparent;
         }
 
-        .item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .item:last-child { border-bottom: none; }
+        .item:hover { background: var(--surface-hover); }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
         }
+
+        .item-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border-strong);
+            flex-shrink: 0;
+        }
+
+        .item-text { min-width: 0; }
 
         .item-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 16px;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .item-link {
-            color: #667eea;
+        .item-url {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .item:hover .item-actions { opacity: 1; }
+
+        .btn-copy, .btn-open {
+            background: none;
+            border: 1.5px solid var(--border-strong);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72em;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.12s;
             text-decoration: none;
-            font-size: 14px;
-            word-break: break-all;
-            display: block;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .item-link:hover {
-            text-decoration: underline;
+        .btn-copy:hover {
+            background: var(--tag-bg);
+            border-color: var(--border-strong);
+            color: var(--text-primary);
         }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
+        .btn-open:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
 
-            .section {
-                padding: 20px;
-            }
+        .btn-copy.copied {
+            color: #2d7a4f;
+            border-color: #b8dfc8;
+            background: #edf7f2;
+        }
+
+        /* Empty / no results */
+        .empty-state {
+            padding: 28px 22px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* Search highlight */
+        mark {
+            background: #fff3b0;
+            color: inherit;
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+
+        /* No results global */
+        #no-results {
+            display: none;
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.9em; }
+            .item { padding: 11px 16px; }
+            .section-header { padding: 16px 16px; }
+            .items-list { padding: 4px 0; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <header>
         <h1>My Collection</h1>
+        <p>Games, quizzes &amp; slides — all in one place.</p>
+    </header>
 
-        <div class="section">
-            <h2>🎮 Games</h2>
-            <div id="games-list" class="items-list"></div>
-        </div>
-        <div class="section">
-            <h2>🎮 Other People's Games</h2>
-            <div id="othergames-list" class="items-list"></div>
-        </div>        
-        <div class="section">
-            <h2>📝 Quizzes / Reviews</h2>
-            <div id="quizzes-list" class="items-list"></div>
-        </div>
-        <div class="section">
-            <h2>📊 Slides</h2>
-            <div id="presentations-list" class="items-list"></div>
-        </div>
+    <div class="search-wrap">
+        <span class="search-icon">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 6.5C10 8.43 8.43 10 6.5 10C4.57 10 3 8.43 3 6.5C3 4.57 4.57 3 6.5 3C8.43 3 10 4.57 10 6.5ZM9.35 10.06C8.61 10.64 7.69 11 6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 7.69 10.64 8.61 10.06 9.35L12.85 12.15L12.15 12.85L9.35 10.06Z" fill="currentColor"/>
+            </svg>
+        </span>
+        <input type="text" id="search" placeholder="Search by title…" autocomplete="off">
+        <button class="search-clear" id="search-clear" title="Clear">✕</button>
     </div>
 
-    <script>
-        // EDIT THESE ARRAYS TO ADD YOUR GAMES AND PRESENTATIONS
-        const games = [
-            {
-                title: "Hangman (common words)",
-                link: "https://claude.ai/public/artifacts/9875f84c-58cc-4876-8350-c935782b26fb"
-            },
-            {
-                title: "Word Tic-Tac-Toe",
-                link: "https://claude.ai/public/artifacts/a4c95ad8-a6e1-4662-be63-9f70e1a58384"
-            },
-            {
-                title: "Find someone who ... (speaking game)",
-                link: "https://claude.ai/public/artifacts/870257b8-c1e7-4061-a06a-a2e7643d1d24"
-            },
-            {
-                title: "Count the Dots (1-10)",
-                link: "https://claude.ai/public/artifacts/b1ae1e97-928d-4940-9140-407695139362"
-            }
-        ];
-        const othergames = [
-            {
-                title: "Fish N Steve's Classroom Games (check Classroom Feud)",
-                link: "https://classroom-webpage.vercel.app/"
-            },
-            {
-                title: "Tay's Teaching Toolkit",
-                link: "https://taysteachingtoolkit.com/homepage"
-            },
-        ];        
-        const quizzes = [
-            {
-                title: "Weather and Extreme Weather",
-                link: "https://claude.ai/public/artifacts/57a86a19-4e25-416c-bc1e-0727c0c736e5"
-            },       
-        ];
-        const presentations = [
-            {
-                title: "What If Humans Didn't Make Garbage",
-                link: "https://docs.google.com/presentation/d/19Q5sV7Fz95phrt68SCBc82X6R5Kdh-oZPuah7GT6tEQ/edit?usp=sharing"
-            },
-            {
-                title: "Types of Pollution",
-                link: "https://docs.google.com/presentation/d/1zkdrEk2vsh3_koWsJVoOGPr-CF67i98U1jihjmB6VsU/edit?usp=sharing"
-            },
-            {
-                title: "3R Quiz",
-                link: "https://docs.google.com/presentation/d/1QBebKucALU3tcjWeaVBWfgXMOJZ_mELEWEwiv3Crfxc/edit?usp=sharing"
-            },
-            {
-                title: "Green Marks",
-                link: "https://docs.google.com/presentation/d/1e4ztTgzW7MPq8k78u2cn-66rq-wroxb7UfeN9ouV__8/edit?usp=sharing"
-            },
-            {
-                title: "Rhyming Words (based on 'Ten Black Dots' book)",
-                link: "https://tinyurl.com/oztendotsrhyme"
-            },
-            {
-                title: "Talking about the Weather",
-                link: "https://tinyurl.com/ozweathertalk"
-            },
-            {
-                title: "Extreme Weather",
-                link: "https://tinyurl.com/ozextremeweather"
-            },
-            {
-                title: "The Day After Tomorrow",
-                link: "https://tinyurl.com/ozdayaftertmrw"
-            },
-            {
-                title: "Weather and Climate",
-                link: "https://docs.google.com/presentation/d/13QgpVbjw59zS40txN-nuHalwSl1na-oOK-Am36JR_bE/edit?usp=sharing"
-            },
-            {
-                title: "Climate Change Actions",
-                link: "https://tinyurl.com/ozccaction"
-            },
-            {
-                title: "Responsible Consumption and Fast Fashion",
-                link: "https://docs.google.com/presentation/d/1FwuQxv5AypJaGPHFVkRYxgi81wqlNqUC7Rig7XcQZTQ/edit?usp=sharing"
-            },
-            {
-                title: "A Christmas Carol",
-                link: "https://docs.google.com/presentation/d/1B6_16eAh3qT4DvcLNRz0o3tzXYP4e2k7-LQZAHXaXG4/edit?usp=sharing"
-            },
-            {
-                title: "Christmast What Am I",
-                link: "https://docs.google.com/presentation/d/1Meu_mTQY3_lTaehb3X75oedhtVJGoULickTrRlfExPU/edit?usp=sharing"
-            },
-            {
-                title: "Past, Present, Future",
-                link: "https://docs.google.com/presentation/d/1pYaHbKKYFqYS_OEq-5kt5YuziUOaoG-0OroEFlTye6E/edit?usp=sharing"
-            },
-            {
-                title: "New Year Around the World",
-                link: "https://docs.google.com/presentation/d/1Vg4dL-mkdeKEGs_vPVCIgwmN1qN-zJNbwmibU1Bcypo/edit?usp=sharing"
-            },
-            {
-                title: "New Year's Resolution",
-                link: "https://docs.google.com/presentation/d/1an_hDWmDlKNgjWLgvfu-sEHZq9yBe7rtxm4DOQyEwrw/edit?usp=sharing"
-            },
-            {
-                title: "Weather and Climate Change Riddles",
-                link: "https://docs.google.com/presentation/d/1t6stAuhPbLAcLz5sP20zylfUPXtm8_b9kk_8UTmFawQ/edit?usp=sharing"
-            },
-            {
-                title: "New Year in Indonesia",
-                link: "https://docs.google.com/presentation/d/1zI13VTAGAmu-JJvE2c2uTBA_P3vn1WilceTZy9_ubi4/edit?usp=sharing"
-            },
-            {
-                title: "Book: My Green Day",
-                link: "https://docs.google.com/presentation/d/1SnwBfjfKMY8V-L4QOgj7EnxqoEZiQeZvoYn-w5LSTSA/edit?usp=sharing"
-            },
-            {
-                title: "Thanksgiving Traditions",
-                link: "https://tinyurl.com/ozthanksgiving"
-            },
-            {
-                title: "The Seed Grows",
-                link: "https://tinyurl.com/ozseedbook"
-            },
-            {
-                title: "Plant Parts and Functions",
-                link: "https://tinyurl.com/ozplantparts"
-            },
-            {
-                title: "Plants We Eat",
-                link: "https://docs.google.com/presentation/d/1uufYPruIypz0_g5iyZNAKbzG7DkvmGniDfHYeTaNklI/edit?usp=sharing"
-            },
-            {
-                title: "Eat a Rainbow",
-                link: "https://docs.google.com/presentation/d/1CL55Bq6DjlYNa5fy3qRNLVwy_Z3XI0hw7iZYifwx0_k/edit?usp=sharing"
-            },
-            {
-                title: "Happy Birthday",
-                link: "https://tinyurl.com/ozhappybirthday"
-            },
-            {
-                title: "Routines by Day of the Week",
-                link: "https://tinyurl.com/ozroutines"
-            },
-            {
-                title: "At the Airport",
-                link: "https://tinyurl.com/ozairport"
-            },
-            {
-                title: "Give Me 10: People in America",
-                link: "https://tinyurl.com/ozpeopleinamerica",
-            },
-            {
-                title: "Give Me 10: School Life",
-                link: "https://tinyurl.com/ozschool",
-            },
-            {
-                title: "Give Me 10: Indonesia Fast Facts",
-                link: "https://tinyurl.com/ozindofacts",
-            },
-            {
-                title: "Give Me 10: Halloween",
-                link: "https://tinyurl.com/ozhappyhalloween",
-            },
-            {
-                title: "Give Me 10: Homes in USA, Taiwan, and Indonesia",
-                link: "https://tinyurl.com/ozg10homes",
-            },
-            {
-                title: "Give Me 10: Indonesian Fruits",
-                link: "https://tinyurl.com/ozg10indofruit",
-            },
-            {
-                title: "Give Me 10: The Boy Who Became Stone",
-                link: "https://tinyurl.com/ozg10malin",
-            },
-            {
-                title: "Give Me 10: Thanksgiving",
-                link: "https://tinyurl.com/ozg10thanksgiving",
-            },
-        ];
+    <div id="sections-wrap"></div>
+    <div id="no-results">No results for "<span id="no-results-query"></span>"</div>
+</div>
 
-        function render() {
-            renderCollection('games', games);
-            renderCollection('othergames', othergames);
-            renderCollection('quizzes', quizzes);
-            renderCollection('presentations', presentations);
-        }
+<script>
+// ─────────────────────────────────────────
+// DATA — edit these arrays to add/remove items
+// ─────────────────────────────────────────
+const sections = [
+    {
+        id: "games",
+        emoji: "🎮",
+        title: "Games",
+        items: [
+            { title: "Hangman (common words)", link: "https://claude.ai/public/artifacts/9875f84c-58cc-4876-8350-c935782b26fb" },
+            { title: "Word Tic-Tac-Toe", link: "https://claude.ai/public/artifacts/a4c95ad8-a6e1-4662-be63-9f70e1a58384" },
+            { title: "Find someone who … (speaking game)", link: "https://claude.ai/public/artifacts/870257b8-c1e7-4061-a06a-a2e7643d1d24" },
+            { title: "Count the Dots (1–10)", link: "https://claude.ai/public/artifacts/b1ae1e97-928d-4940-9140-407695139362" },
+        ]
+    },
+    {
+        id: "othergames",
+        emoji: "🕹️",
+        title: "Other People's Games",
+        items: [
+            { title: "Fish N Steve's Classroom Games (check Classroom Feud)", link: "https://classroom-webpage.vercel.app/" },
+            { title: "Tay's Teaching Toolkit", link: "https://taysteachingtoolkit.com/homepage" },
+        ]
+    },
+    {
+        id: "quizzes",
+        emoji: "📝",
+        title: "Quizzes / Reviews",
+        items: [
+            { title: "Weather and Extreme Weather", link: "https://claude.ai/public/artifacts/57a86a19-4e25-416c-bc1e-0727c0c736e5" },
+            { title: "Aa–Pp: Words and Phonics", link: "https://claude.ai/public/artifacts/76b736c1-0e3d-488f-89ec-cd20a02da1b4" },
+            { title: "Aa–Pp: Letters and Words", link: "https://claude.ai/public/artifacts/0bd5e06e-a6db-45e2-b325-e0d07c291471" },
+        ]
+    },
+    {
+        id: "presentations",
+        emoji: "📊",
+        title: "Slides",
+        items: [
+            { title: "What If Humans Didn't Make Garbage", link: "https://docs.google.com/presentation/d/19Q5sV7Fz95phrt68SCBc82X6R5Kdh-oZPuah7GT6tEQ/edit?usp=sharing" },
+            { title: "Types of Pollution", link: "https://docs.google.com/presentation/d/1zkdrEk2vsh3_koWsJVoOGPr-CF67i98U1jihjmB6VsU/edit?usp=sharing" },
+            { title: "3R Quiz", link: "https://docs.google.com/presentation/d/1QBebKucALU3tcjWeaVBWfgXMOJZ_mELEWEwiv3Crfxc/edit?usp=sharing" },
+            { title: "Green Marks", link: "https://docs.google.com/presentation/d/1e4ztTgzW7MPq8k78u2cn-66rq-wroxb7UfeN9ouV__8/edit?usp=sharing" },
+            { title: "Rhyming Words (based on 'Ten Black Dots' book)", link: "https://tinyurl.com/oztendotsrhyme" },
+            { title: "Talking about the Weather", link: "https://tinyurl.com/ozweathertalk" },
+            { title: "Extreme Weather", link: "https://tinyurl.com/ozextremeweather" },
+            { title: "The Day After Tomorrow", link: "https://tinyurl.com/ozdayaftertmrw" },
+            { title: "Weather and Climate", link: "https://docs.google.com/presentation/d/13QgpVbjw59zS40txN-nuHalwSl1na-oOK-Am36JR_bE/edit?usp=sharing" },
+            { title: "Climate Change Actions", link: "https://tinyurl.com/ozccaction" },
+            { title: "Responsible Consumption and Fast Fashion", link: "https://docs.google.com/presentation/d/1FwuQxv5AypJaGPHFVkRYxgi81wqlNqUC7Rig7XcQZTQ/edit?usp=sharing" },
+            { title: "A Christmas Carol", link: "https://docs.google.com/presentation/d/1B6_16eAh3qT4DvcLNRz0o3tzXYP4e2k7-LQZAHXaXG4/edit?usp=sharing" },
+            { title: "Christmas What Am I", link: "https://docs.google.com/presentation/d/1Meu_mTQY3_lTaehb3X75oedhtVJGoULickTrRlfExPU/edit?usp=sharing" },
+            { title: "Past, Present, Future", link: "https://docs.google.com/presentation/d/1pYaHbKKYFqYS_OEq-5kt5YuziUOaoG-0OroEFlTye6E/edit?usp=sharing" },
+            { title: "New Year Around the World", link: "https://docs.google.com/presentation/d/1Vg4dL-mkdeKEGs_vPVCIgwmN1qN-zJNbwmibU1Bcypo/edit?usp=sharing" },
+            { title: "New Year's Resolution", link: "https://docs.google.com/presentation/d/1an_hDWmDlKNgjWLgvfu-sEHZq9yBe7rtxm4DOQyEwrw/edit?usp=sharing" },
+            { title: "Weather and Climate Change Riddles", link: "https://docs.google.com/presentation/d/1t6stAuhPbLAcLz5sP20zylfUPXtm8_b9kk_8UTmFawQ/edit?usp=sharing" },
+            { title: "New Year in Indonesia", link: "https://docs.google.com/presentation/d/1zI13VTAGAmu-JJvE2c2uTBA_P3vn1WilceTZy9_ubi4/edit?usp=sharing" },
+            { title: "Book: My Green Day", link: "https://docs.google.com/presentation/d/1SnwBfjfKMY8V-L4QOgj7EnxqoEZiQeZvoYn-w5LSTSA/edit?usp=sharing" },
+            { title: "Thanksgiving Traditions", link: "https://tinyurl.com/ozthanksgiving" },
+            { title: "The Seed Grows", link: "https://tinyurl.com/ozseedbook" },
+            { title: "Plant Parts and Functions", link: "https://tinyurl.com/ozplantparts" },
+            { title: "Plants We Eat", link: "https://docs.google.com/presentation/d/1uufYPruIypz0_g5iyZNAKbzG7DkvmGniDfHYeTaNklI/edit?usp=sharing" },
+            { title: "Eat a Rainbow", link: "https://docs.google.com/presentation/d/1CL55Bq6DjlYNa5fy3qRNLVwy_Z3XI0hw7iZYifwx0_k/edit?usp=sharing" },
+            { title: "Happy Birthday", link: "https://tinyurl.com/ozhappybirthday" },
+            { title: "Routines by Day of the Week", link: "https://tinyurl.com/ozroutines" },
+            { title: "At the Airport", link: "https://tinyurl.com/ozairport" },
+            { title: "Give Me 10: People in America", link: "https://tinyurl.com/ozpeopleinamerica" },
+            { title: "Give Me 10: School Life", link: "https://tinyurl.com/ozschool" },
+            { title: "Give Me 10: Indonesia Fast Facts", link: "https://tinyurl.com/ozindofacts" },
+            { title: "Give Me 10: Halloween", link: "https://tinyurl.com/ozhappyhalloween" },
+            { title: "Give Me 10: Homes in USA, Taiwan, and Indonesia", link: "https://tinyurl.com/ozg10homes" },
+            { title: "Give Me 10: Indonesian Fruits", link: "https://tinyurl.com/ozg10indofruit" },
+            { title: "Give Me 10: The Boy Who Became Stone", link: "https://tinyurl.com/ozg10malin" },
+            { title: "Give Me 10: Thanksgiving", link: "https://tinyurl.com/ozg10thanksgiving" },
+        ]
+    }
+];
 
-        function renderCollection(type, collection) {
-            const listElement = document.getElementById(`${type}-list`);
-            
-            listElement.innerHTML = collection.map(item => `
-                <a href="${escapeHtml(item.link)}" target="_blank" class="item">
-                    <div>
-                        <div class="item-title">${escapeHtml(item.title)}</div>
-                        <span class="item-link">${escapeHtml(item.link)}</span>
+// ─────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────
+const wrap = document.getElementById('sections-wrap');
+const searchEl = document.getElementById('search');
+const clearBtn = document.getElementById('search-clear');
+const noResults = document.getElementById('no-results');
+const noResultsQ = document.getElementById('no-results-query');
+
+function esc(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function highlight(text, query) {
+    if (!query) return esc(text);
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return esc(text).replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+}
+
+function shortUrl(url) {
+    try {
+        const u = new URL(url);
+        let host = u.hostname.replace(/^www\./, '');
+        let path = u.pathname.length > 1 ? u.pathname : '';
+        if (path.length > 28) path = path.slice(0, 28) + '…';
+        return host + path;
+    } catch { return url; }
+}
+
+function renderSections(query) {
+    wrap.innerHTML = '';
+    let totalVisible = 0;
+
+    sections.forEach(sec => {
+        const q = query.toLowerCase().trim();
+        const filtered = q ? sec.items.filter(it => it.title.toLowerCase().includes(q)) : sec.items;
+
+        const div = document.createElement('div');
+        div.className = 'section';
+        div.dataset.id = sec.id;
+
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        header.innerHTML = `
+            <div class="section-title">
+                <span class="section-emoji">${sec.emoji}</span>
+                ${esc(sec.title)}
+                <span class="badge">${filtered.length}</span>
+            </div>
+            <span class="chevron">▾</span>
+        `;
+        header.addEventListener('click', () => div.classList.toggle('collapsed'));
+
+        const list = document.createElement('div');
+        list.className = 'items-list';
+
+        if (filtered.length === 0) {
+            list.innerHTML = `<div class="empty-state">No matches in this section.</div>`;
+        } else {
+            filtered.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'item';
+                row.innerHTML = `
+                    <div class="item-left">
+                        <span class="item-dot"></span>
+                        <div class="item-text">
+                            <div class="item-title">${highlight(item.title, query)}</div>
+                            <div class="item-url">${esc(shortUrl(item.link))}</div>
+                        </div>
                     </div>
-                </a>
-            `).join('');
+                    <div class="item-actions">
+                        <button class="btn-copy" data-link="${esc(item.link)}" title="Copy link">Copy link</button>
+                        <a class="btn-open" href="${esc(item.link)}" target="_blank" rel="noopener" title="Open">Open ↗</a>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        div.appendChild(header);
+        div.appendChild(list);
+        wrap.appendChild(div);
+        totalVisible += filtered.length;
+    });
 
-        render();
-    </script>
+    // Copy button logic
+    wrap.querySelectorAll('.btn-copy').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            const link = btn.dataset.link;
+            navigator.clipboard.writeText(link).then(() => {
+                btn.textContent = '✓ Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy link';
+                    btn.classList.remove('copied');
+                }, 1800);
+            });
+        });
+    });
+
+    const hasQuery = query.trim().length > 0;
+    noResults.style.display = (hasQuery && totalVisible === 0) ? 'block' : 'none';
+    noResultsQ.textContent = query;
+}
+
+// Search
+searchEl.addEventListener('input', () => {
+    const q = searchEl.value;
+    clearBtn.style.display = q ? 'block' : 'none';
+    renderSections(q);
+});
+
+clearBtn.addEventListener('click', () => {
+    searchEl.value = '';
+    clearBtn.style.display = 'none';
+    searchEl.focus();
+    renderSections('');
+});
+
+renderSections('');
+</script>
 </body>
 </html>
